@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Agenda Glam 🌸 — Priscila Graunki</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --rosa: #E9A6B2;
+    --dourado: #C4A76F;
+    --verde: #A9D6A4;
+    --marrom: #3B2E2A;
+    --offwhite: #F7F4F2;
+    --branco: #FFFFFF;
+    --card-shadow: 0 10px 30px rgba(59,46,42,0.06);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:'Montserrat',system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background: linear-gradient(180deg,var(--offwhite), #fff);
+    color:var(--marrom);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:18px auto;padding:12px}
+  /* Header / banner */
+  header{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative}
+  .banner{
+    width:100%;max-width:980px;background:linear-gradient(90deg, rgba(233,166,178,0.10), rgba(196,167,111,0.05));
+    border-radius:16px;padding:18px;box-shadow:var(--card-shadow);display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .banner-left{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .app-title{font-family:'Playfair Display',serif;color:var(--marrom);font-size:26px;margin:0}
+  .app-sub{color:var(--marrom);opacity:0.8;font-size:13px;margin:0}
+  .banner-emojis{font-size:28px}
+  .estacio-logo{width:110px;height:auto;opacity:0.95}
+  .disclaimer{font-size:12px;color:var(--marrom);opacity:0.75;text-align:center;margin-top:8px}
+  /* Top-right toggle */
+  .top-right-toggle{position:absolute;right:18px;top:10px}
+  .toggle-btn{background:var(--rosa);border:none;color:white;padding:8px 12px;border-radius:999px;cursor:pointer;box-shadow:0 6px 18px rgba(196,167,111,0.12)}
+  /* layout grid */
+  .grid{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:16px}
+  .card{background:var(--branco);border-radius:12px;padding:12px;box-shadow:var(--card-shadow)}
+  /* calendar styles */
+  .month-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px;text-align:center;color:rgba(59,46,42,0.6);font-weight:700;font-size:13px}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:8px}
+  .day{min-height:86px;padding:8px;border-radius:10px;border:1px solid #f4e7e7;position:relative;overflow:hidden;background:linear-gradient(180deg,#fff,#fff)}
+  .day.today{background:linear-gradient(180deg, rgba(169,214,164,0.12), #fff)}
+  .day .num{font-weight:700}
+  .event-pill{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;color:#fff;margin-top:8px}
+  .pill-prova{background:var(--rosa)} .pill-simulado{background:var(--dourado);color:#2b1f1a} .pill-estudo{background:var(--verde);color:#2b1f1a}
+  .add-day-btn{position:absolute;right:8px;bottom:8px;background:var(--rosa);color:#fff;border:none;padding:6px;border-radius:8px;cursor:pointer}
+  /* sidebar */
+  .notes-list,.todo-list,.topics-list{max-height:220px;overflow:auto;display:flex;flex-direction:column;gap:8px}
+  .task-row{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:8px;border-radius:10px;background:linear-gradient(180deg,#fff,#fff)}
+  .small{font-size:13px;color:rgba(59,46,42,0.7)}
+  .search-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+  input[type="text"],input[type="date"],input[type="time"],textarea,select{padding:8px;border-radius:8px;border:1px solid #eee;width:100%;font-size:14px}
+  button.btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:transparent;cursor:pointer}
+  button.primary{background:var(--dourado);border:none;color:#1f140f;font-weight:700}
+  .motivation{background:linear-gradient(90deg, rgba(233,166,178,0.06), rgba(196,167,111,0.04));padding:8px;border-radius:10px;text-align:center;font-weight:600;color:var(--marrom)}
+  footer{margin-top:18px;text-align:center;color:var(--marrom);font-size:13px}
+  .socials{display:flex;gap:10px;justify-content:center;margin-top:8px}
+  .socials a{background:linear-gradient(90deg, rgba(233,166,178,0.06), rgba(196,167,111,0.03));padding:8px 12px;border-radius:999px;text-decoration:none;color:var(--marrom);font-weight:600}
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:80}
+  .modal{background:var(--branco);padding:16px;border-radius:12px;max-width:520px;width:100%;box-shadow:var(--card-shadow)}
+  /* responsive */
+  @media (max-width:980px){.grid{grid-template-columns:1fr}.top-right-toggle{position:static;align-self:flex-end;margin-top:8px}.banner{flex-direction:column;align-items:center}.estacio-logo{display:none}}
+  /* dark mode */
+  body.dark{background:linear-gradient(180deg,#2b2220,#201615);color:var(--offwhite)}
+  body.dark .card{background:#332a27;color:var(--offwhite)}
+  body.dark .banner{background:linear-gradient(90deg, rgba(59,46,42,0.12), rgba(196,167,111,0.03));}
+  body.dark .task-row{background:#4a3d39}
+  /* small helper */
+  .muted{color:rgba(59,46,42,0.6)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <!-- top-right mode toggle -->
+      <div class="top-right-toggle">
+        <button id="modeToggle" class="toggle-btn" title="Modo Dia / Noite">🌞 / 🌙</button>
+      </div>
+
+      <div class="banner" role="banner" aria-label="Banner Agenda Glam">
+        <div class="banner-left">
+          <div class="banner-emojis">💖🎀📚</div>
+          <h1 class="app-title">Agenda Glam 2025–2028 ✨</h1>
+          <div class="app-sub">por <strong>Priscila Graunki</strong> — Graduanda em Nutrição & Biomedicina (Estácio)</div>
+        </div>
+
+        <!-- Estácio logo pequeno (ilustrativo) -->
+        <div style="text-align:right">
+          <svg class="estacio-logo" viewBox="0 0 250 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="translate(6,6)">
+              <circle cx="20" cy="20" r="16" fill="#C4A76F"></circle>
+              <text x="48" y="30" font-family="Montserrat, sans-serif" font-size="20" fill="#3B2E2A" font-weight="700">Estácio</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="disclaimer small">Aplicativo independente — criado por Priscila Graunki. Créditos: Estácio de Sá. Não é app oficial da instituição.</div>
+    </header>
+
+    <main class="grid" role="main">
+      <!-- LEFT: Calendar / Agenda principal -->
+      <section class="card" aria-labelledby="calendarTitle">
+        <div class="month-row">
+          <div id="calendarTitle" style="font-weight:700;font-size:16px">—</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button id="prevBtn" class="btn">◀</button>
+            <button id="nextBtn" class="btn">▶</button>
+            <select id="yearSel" class="btn small" style="padding:8px;border-radius:8px">
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028" selected>2028</option>
+            </select>
+            <button id="openAdd" class="btn primary" title="Adicionar evento rápido">＋ Adicionar Evento</button>
+          </div>
+        </div>
+
+        <div class="motivation" id="motivationBox" style="margin-top:12px">✨ Você consegue — pequeno passo hoje, grande conquista amanhã! ✨</div>
+
+        <div class="weekdays" id="weekLabels"></div>
+        <div class="days" id="daysGrid" aria-live="polite"></div>
+
+        <div style="display:flex;gap:12px;margin-top:12px;align-items:flex-start">
+          <div style="flex:1">
+            <h3 style="margin:0;font-size:15px">Próximos eventos</h3>
+            <div id="upcoming" style="margin-top:8px;display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+          <div style="width:260px">
+            <div><strong>Pesquisar Glam 🔎</strong></div>
+            <div class="search-row">
+              <input id="glamSearch" type="text" placeholder="Pesquisar (ex: farmacologia banco de questões)" />
+              <button id="searchBtn" class="btn primary">Buscar</button>
+            </div>
+
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+              <button id="btnEstacio" class="btn">🌐 Site Estácio</button>
+              <button id="btnEstacioApp" class="btn">📱 App Estácio (Play Store)</button>
+            </div>
+
+            <div style="margin-top:12px">
+              <div style="font-weight:700">Integrações</div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button id="addToGoogle" class="btn">➕ Google Calendar</button>
+                <a href="https://www.notion.so" target="_blank" rel="noopener" class="btn">Notion</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Diary, To-Do, Forum, Credits -->
+      <aside style="display:flex;flex-direction:column;gap:12px">
+        <!-- Diary -->
+        <div class="card" aria-labelledby="diaryTitle">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h4 id="diaryTitle" style="margin:0">📓 Diário</h4>
+            <div class="small muted">Salvo localmente</div>
+          </div>
+          <textarea id="diaryInput" rows="5" placeholder="Escreva seu diário... ex: o que aprendi hoje, sentimentos, resumo de estudo" style="width:100%;margin-top:8px"></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button id="saveDiary" class="btn primary">Salvar</button>
+            <button id="clearDiary" class="btn">Limpar</button>
+          </div>
+          <div id="diaryList" style="margin-top:10px;max-height:120px;overflow:auto"></div>
+        </div>
+
+        <!-- To-Do -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h4 style="margin:0">💅 To-Do Glam</h4>
+            <div class="small muted">Checklist pastel</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <input id="todoInput" placeholder="Nova tarefa..." />
+            <button id="addTodo" class="btn primary">➕</button>
+          </div>
+          <div id="todoList" class="todo-list" style="margin-top:10px"></div>
+          <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+            <button id="clearDone" class="btn">Limpar concluídas</button>
+            <button id="exportBtn" class="btn">Exportar (backup)</button>
+          </div>
+        </div>
+
+        <!-- Forum -->
+        <div class="card">
+          <h4 style="margin:0 0 8px 0">💬 Fórum Glam</h4>
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input id="topicInput" placeholder="Novo tópico (ex: Farmacologia 💊)" />
+            <button id="createTopic" class="btn primary">Criar</button>
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <div style="width:150px">
+              <div id="topics" class="topics-list"></div>
+            </div>
+            <div style="flex:1">
+              <div id="topicTitle" style="font-weight:700">Selecione um tópico</div>
+              <div id="posts" style="margin-top:8px;max-height:140px;overflow:auto"></div>
+
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <input id="postAuthor" placeholder="Seu nome" value="Estudante" style="width:120px" />
+                <input id="postText" placeholder="Escreva uma resposta..." />
+                <button id="postBtn" class="btn primary">Postar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Credits -->
+        <div class="card" style="text-align:center">
+          <div style="font-weight:700">Créditos</div>
+          <div class="small muted" style="margin-top:6px">
+            Aplicativo independente criado por <strong>Priscila Graunki</strong> — Graduanda em Nutrição & Biomedicina (Estácio).
+          </div>
+          <div class="socials" style="margin-top:10px">
+            <a href="https://instagram.com/priscillagraunki" target="_blank">📸 Instagram @priscillagraunki</a>
+            <a href="https://tiktok.com/@bemestilosa" target="_blank">🎵 TikTok @bemestilosa</a>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div>Agenda Glance 2025–2028 • Organização & Motivação • Desenvolvido por Priscila Graunki</div>
+      <div style="margin-top:6px;color:rgba(59,46,42,0.6)">Recomendação: faça backup exportando seus dados se usar em vários dispositivos.</div>
+    </footer>
+  </div>
+
+  <!-- Event Modal Template -->
+  <template id="eventTpl">
+    <div class="modal-bg">
+      <div class="modal">
+        <h3 style="margin-top:0">➕ Adicionar evento</h3>
+        <label>Data</label>
+        <input id="evtDate" type="date" />
+        <label style="margin-top:8px">Hora (opcional)</label>
+        <input id="evtTime" type="time" />
+        <label style="margin-top:8px">Título</label>
+        <input id="evtTitle" type="text" placeholder="Ex: Prova de Farmacologia 📚" />
+        <label style="margin-top:8px">Tipo</label>
+        <select id="evtType"><option>Prova</option><option>Simulado</option><option>Estudo</option><option>Lembrete</option></select>
+        <label style="margin-top:8px">Notas</label>
+        <textarea id="evtNotes" rows="3"></textarea>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+          <div class="small muted">Toque ao salvar e lembrete (se horário definido)</div>
+          <div style="display:flex;gap:8px">
+            <button id="evtCancel" class="btn">Cancelar</button>
+            <button id="evtSave" class="btn primary">Salvar</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </template>
+
+  <!-- Audio elements -->
+  <audio id="soundClick" src="https://assets.mixkit.co/active_storage/sfx/2564/2564-preview.mp3" preload="auto"></audio>
+  <audio id="soundCres" src="https://assets.mixkit.co/active_storage/sfx/2574/2574-preview.mp3" preload="auto"></audio>
+
+<script>
+/* Agenda Glance — single-file app
+   Persistence: localStorage keys:
+   glam_events, glam_diary, glam_todos, glam_forum
+*/
+
+// ---------- state ----------
+const state = {
+  year: new Date().getFullYear(),
+  month: new Date().getMonth(),
+  events: JSON.parse(localStorage.getItem('glam_events')||'[]'),
+  diary: JSON.parse(localStorage.getItem('glam_diary')||'[]'),
+  todos: JSON.parse(localStorage.getItem('glam_todos')||'[]'),
+  forum: JSON.parse(localStorage.getItem('glam_forum')||'[]'),
+};
+
+// --- DOM refs ---
+const weekLabelsEl = document.getElementById('weekLabels');
+const daysGrid = document.getElementById('daysGrid');
+const calendarTitle = document.getElementById('calendarTitle');
+const yearSel = document.getElementById('yearSel');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const openAdd = document.getElementById('openAdd');
+const upcomingEl = document.getElementById('upcoming');
+const glamSearch = document.getElementById('glamSearch');
+const searchBtn = document.getElementById('searchBtn');
+const btnEstacio = document.getElementById('btnEstacio');
+const btnEstacioApp = document.getElementById('btnEstacioApp');
+const addToGoogle = document.getElementById('addToGoogle');
+
+const diaryInput = document.getElementById('diaryInput');
+const saveDiary = document.getElementById('saveDiary');
+const clearDiary = document.getElementById('clearDiary');
+const diaryList = document.getElementById('diaryList');
+
+const todoInput = document.getElementById('todoInput');
+const addTodo = document.getElementById('addTodo');
+const todoList = document.getElementById('todoList');
+const clearDone = document.getElementById('clearDone');
+const exportBtn = document.getElementById('exportBtn');
+
+const topicInput = document.getElementById('topicInput');
+const createTopic = document.getElementById('createTopic');
+const topicsEl = document.getElementById('topics');
+const topicTitle = document.getElementById('topicTitle');
+const postsEl = document.getElementById('posts');
+const postAuthor = document.getElementById('postAuthor');
+const postText = document.getElementById('postText');
+const postBtn = document.getElementById('postBtn');
+
+const modeToggle = document.getElementById('modeToggle');
+const motivationBox = document.getElementById('motivationBox');
+
+const soundClick = document.getElementById('soundClick');
+const soundCres = document.getElementById('soundCres');
+
+// week labels
+const weekLabels = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+weekLabelsEl.innerHTML = weekLabels.map(w=> `<div>${w}</div>`).join('');
+
+// --- helpers ---
+function persist(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
+function persistRaw(key,val){ localStorage.setItem(key,val); }
+function playClick(){ try{ soundClick.currentTime=0; soundClick.play(); }catch(e){} }
+async function playCres(){ try{ soundCres.currentTime=0; soundCres.play(); }catch(e){} }
+function esc(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, m=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+// --- calendar render ---
+function renderCalendar(){
+  daysGrid.innerHTML='';
+  const firstDay = new Date(state.year, state.month, 1).getDay();
+  const daysInMonth = new Date(state.year, state.month+1, 0).getDate();
+  const monthName = new Date(state.year, state.month, 1).toLocaleString('pt-BR',{month:'long'});
+  calendarTitle.textContent = monthName.charAt(0).toUpperCase()+monthName.slice(1) + ' ' + state.year;
+  for(let i=0;i<firstDay;i++){ daysGrid.appendChild(document.createElement('div')); }
+  const todayIso = new Date().toISOString().slice(0,10);
+  for(let d=1; d<=daysInMonth; d++){
+    const iso = new Date(state.year, state.month, d).toISOString().slice(0,10);
+    const dayEl = document.createElement('div'); dayEl.className='day'; dayEl.dataset.iso = iso;
+    if(iso === todayIso) dayEl.classList.add('today');
+    dayEl.innerHTML = `<div class="num">${d}</div>`;
+    const evs = state.events.filter(e=> e.date === iso);
+    if(evs.length){
+      const emo = document.createElement('div'); emo.style.marginTop='6px'; emo.style.fontSize='18px'; emo.textContent = evs.length===1 ? '📌' : '✨';
+      dayEl.appendChild(emo);
+      const evWrap = document.createElement('div'); evWrap.style.marginTop='6px';
+      evs.slice(0,3).forEach(ev=>{
+        const pill = document.createElement('div'); pill.className='event-pill ' + (ev.type==='Prova'?'pill-prova':ev.type==='Simulado'?'pill-simulado':'pill-estudo');
+        pill.textContent = (ev.type==='Prova'?'📚 ': ev.type==='Simulado'?'📝 ':'🧪 ') + ev.title;
+        pill.title = ev.notes || '';
+        evWrap.appendChild(pill);
+      });
+      if(evs.length>3){ const more=document.createElement('div'); more.textContent=`+${evs.length-3} mais`; more.className='small'; evWrap.appendChild(more); }
+      dayEl.appendChild(evWrap);
+    }
+    const addBtn = document.createElement('button'); addBtn.className='add-day-btn'; addBtn.textContent='＋'; addBtn.addEventListener('click', (ev)=>{ ev.stopPropagation(); openEventModal(iso); });
+    dayEl.appendChild(addBtn);
+    dayEl.addEventListener('click', ()=> openEventModal(iso));
+    daysGrid.appendChild(dayEl);
+  }
+}
+
+// upcoming
+function renderUpcoming(){
+  upcomingEl.innerHTML='';
+  const sorted = [...state.events].sort((a,b)=> new Date(a.date+'T'+(a.time||'00:00')) - new Date(b.date+'T'+(b.time||'00:00')));
+  sorted.slice(0,6).forEach(ev=>{
+    const el = document.createElement('div'); el.style.display='flex'; el.style.justifyContent='space-between'; el.style.alignItems='center'; el.style.padding='8px'; el.style.borderRadius='8px'; el.style.background='var(--offwhite)';
+    el.innerHTML = `<div><div style="font-weight:700">${esc(ev.title)}</div><div class="small muted">${ev.date}${ev.time? ' • '+ev.time : ''} • ${ev.type}</div></div>`;
+    const r = document.createElement('div'); r.style.display='flex'; r.style.gap='8px';
+    const del = document.createElement('button'); del.className='btn'; del.textContent='Remover'; del.addEventListener('click', ()=>{ if(confirm('Remover evento?')){ state.events=state.events.filter(x=> x.id!==ev.id); persist('glam_events',state.events); renderCalendar(); renderUpcoming(); }});
+    r.appendChild(del);
+    el.appendChild(r);
+    upcomingEl.appendChild(el);
+  });
+}
+
+// --- event modal ---
+function openEventModal(dateIso=''){
+  const tpl = document.getElementById('eventTpl').content.cloneNode(true);
+  document.body.appendChild(tpl);
+  const modal = document.querySelector('.modal-bg');
+  modal.querySelector('#evtDate').value = dateIso || '';
+  modal.querySelector('#evtCancel').addEventListener('click', ()=> document.body.removeChild(modal));
+  modal.querySelector('#evtSave').addEventListener('click', ()=>{
+    const date = modal.querySelector('#evtDate').value;
+    const time = modal.querySelector('#evtTime').value;
+    const title = modal.querySelector('#evtTitle').value.trim();
+    const type = modal.querySelector('#evtType').value;
+    const notes = modal.querySelector('#evtNotes').value.trim();
+    if(!date || !title) return alert('Preencha data e título');
+    const ev = { id: Date.now(), date, time, title, type, notes };
+    state.events.push(ev); persist('glam_events', state.events); document.body.removeChild(modal); renderCalendar(); renderUpcoming(); playCres(); scheduleNotification(ev);
+  });
+}
+
+// --- notifications while tab open ---
+function scheduleNotification(ev){
+  try{
+    if('Notification' in window && Notification.permission !== 'granted') Notification.requestPermission();
+    if(ev.time){
+      const dt = new Date(ev.date + 'T' + ev.time);
+      const diff = dt - new Date();
+      if(diff>0 && diff < 1000*60*60*24*28){ // schedule if within 28 days
+        setTimeout(()=> {
+          playCres();
+          if('Notification' in window && Notification.permission === 'granted'){
+            new Notification('Lembrete: ' + ev.title, { body: ev.date + (ev.time? ' • '+ev.time : '') });
+          } else {
+            alert('⏰ Lembrete: ' + ev.title + '\\n' + ev.date + (ev.time? ' • '+ev.time : ''));
+          }
+        }, diff);
+      }
+    }
+  }catch(e){ console.warn(e); }
+}
+
+// --- diary ---
+function renderDiary(){
+  diaryList.innerHTML = '';
+  state.diary.slice().reverse().forEach(d=>{
+    const el = document.createElement('div'); el.style.padding='8px'; el.style.borderRadius='8px'; el.style.background='var(--offwhite)'; el.style.marginBottom='6px';
+    el.innerHTML = `<div class="small muted">${new Date(d.date).toLocaleString()}</div><div style="margin-top:6px">${esc(d.text)}</div>`;
+    diaryList.appendChild(el);
+  });
+}
+saveDiary.addEventListener('click', ()=>{
+  const txt = diaryInput.value.trim(); if(!txt) return alert('Escreva algo');
+  state.diary.push({ id: Date.now(), date: new Date().toISOString(), text: txt }); persist('glam_diary', state.diary); diaryInput.value=''; renderDiary(); playClick();
+});
+clearDiary.addEventListener('click', ()=>{ if(confirm('Limpar diário?')){ state.diary=[]; persist('glam_diary',state.diary); renderDiary(); }});
+
+// --- todos ---
+function renderTodos(){
+  todoList.innerHTML='';
+  state.todos.forEach(t=>{
+    const row = document.createElement('div'); row.className='task-row';
+    const left = document.createElement('div'); left.style.display='flex';left.style.alignItems='center';left.style.gap='8px';
+    const ch = document.createElement('input'); ch.type='checkbox'; ch.checked = !!t.done; ch.addEventListener('change', ()=>{ t.done = ch.checked; persist('glam_todos', state.todos); renderTodos(); playClick();});
+    const txt = document.createElement('div'); txt.textContent = t.text; if(t.done) txt.style.textDecoration='line-through';
+    left.appendChild(ch); left.appendChild(txt);
+    const del = document.createElement('button'); del.className='btn'; del.textContent='✖'; del.addEventListener('click', ()=>{ state.todos = state.todos.filter(x=> x.id!==t.id); persist('glam_todos', state.todos); renderTodos();});
+    row.appendChild(left); row.appendChild(del);
+    todoList.appendChild(row);
+  });
+}
+addTodo.addEventListener('click', ()=> {
+  const t = todoInput.value.trim(); if(!t) return alert('Escreva a tarefa');
+  state.todos.push({ id: Date.now(), text: t, done:false }); persist('glam_todos', state.todos); todoInput.value=''; renderTodos(); playCres();
+});
+clearDone.addEventListener('click', ()=> { state.todos = state.todos.filter(t=> !t.done); persist('glam_todos', state.todos); renderTodos(); });
+
+// --- forum ---
+let activeTopicId = state.forum[0]?.id || null;
+function renderForum(){
+  topicsEl.innerHTML=''; 
+  state.forum.forEach(t=>{
+    const el = document.createElement('div'); el.className='small'; el.style.padding='6px'; el.style.borderRadius='8px'; el.style.cursor='pointer'; el.textContent = t.title;
+    if(t.id===activeTopicId) el.style.background = 'var(--rosa)'; 
+    el.addEventListener('click', ()=>{ activeTopicId = t.id; renderForum();});
+    topicsEl.appendChild(el);
+  });
+  renderTopicView();
+}
+function renderTopicView(){
+  const topic = state.forum.find(f=> f.id===activeTopicId);
+  if(!topic){ topicTitle.textContent='Selecione um tópico'; postsEl.innerHTML=''; return; }
+  topicTitle.textContent = topic.title;
+  postsEl.innerHTML = '';
+  topic.posts.slice().reverse().forEach(p=>{
+    const el = document.createElement('div'); el.className='task-row'; el.style.flexDirection='column'; el.style.alignItems='flex-start';
+    el.innerHTML = `<div class="small muted">${esc(p.author)}</div><div style="margin-top:6px">${esc(p.text)}</div>`;
+    postsEl.appendChild(el);
+  });
+}
+createTopic.addEventListener('click', ()=> {
+  const t = topicInput.value.trim(); if(!t) return alert('Escreva título do tópico');
+  const topic = { id: Date.now(), title: t, posts: [] };
+  state.forum.push(topic); persist('glam_forum', state.forum); topicInput.value=''; activeTopicId = topic.id; renderForum(); playCres();
+});
+postBtn.addEventListener('click', ()=> {
+  const author = postAuthor.value.trim() || 'Estudante'; const text = postText.value.trim(); if(!text) return alert('Escreva algo');
+  const topic = state.forum.find(f=> f.id===activeTopicId); if(!topic) return alert('Selecione um tópico');
+  topic.posts.push({ id: Date.now(), author, text }); persist('glam_forum', state.forum); postText.value=''; renderTopicView(); playClick();
+});
+
+// --- search & btns ---
+searchBtn.addEventListener('click', ()=> {
+  const q = glamSearch.value.trim();
+  const base = 'https://www.google.com/search?q=';
+  const suffix = ' estudo enfermagem medicina farmacologia anatomia fisiologia';
+  window.open(base + encodeURIComponent((q||'') + suffix), '_blank'); playClick();
+});
+btnEstacio.addEventListener('click', ()=> { window.open('https://www.estacio.br','_blank'); playClick(); });
+btnEstacioApp.addEventListener('click', ()=> { window.open('https://play.google.com/store/search?q=Est%C3%A1cio','_blank'); playClick(); });
+
+// --- integration google quick add uses last event ---
+addToGoogle.addEventListener('click', ()=> {
+  const last = state.events[state.events.length-1]; if(!last) return alert('Adicione um evento primeiro');
+  const title = encodeURIComponent(last.title); const details = encodeURIComponent(last.notes || '');
+  let dates='';
+  if(last.time){ const start = new Date(last.date+'T'+last.time); const end = new Date(start.getTime()+60*60*1000);
+    const fmt = d => d.toISOString().replace(/-|:|\.\d+/g,'');
+    dates = fmt(start)+'/'+fmt(end);
+  } else { const d = last.date.replace(/-/g,''); dates = d+'/'+d; }
+  const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${dates}`;
+  window.open(url,'_blank'); playClick();
+});
+
+// --- export/import (backup) ---
+exportBtn.addEventListener('click', ()=> {
+  const dump = { events:state.events, diary:state.diary, todos:state.todos, forum:state.forum };
+  const blob = new Blob([JSON.stringify(dump,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='agenda-glam-backup.json'; a.click(); URL.revokeObjectURL(url);
+});
+
+// --- mode toggle / motivation rotation ---
+modeToggle.addEventListener('click', ()=> {
+  document.body.classList.toggle('dark'); playCres();
+});
+const MOTIVS = [
+  "✨ Você é capaz do que desejar!",
+  "🌸 Constância constrói resultados.",
+  "💖 Pequenos passos, grandes vitórias!",
+  "📚 Estude com amor — você vai longe.",
+  "🌟 Confie no seu processo, rainha!"
+];
+function rotateMotivation(){ motivationBox.textContent = MOTIVS[Math.floor(Math.random()*MOTIVS.length)]; }
+setInterval(rotateMotivation,30000);
+
+// --- scheduling notifications for existing events ---
+function initSchedule(){
+  state.events.forEach(ev=> scheduleNotification(ev));
+}
+
+// --- seed defaults if empty ---
+function seed(){
+  if(!state.events.length){
+    state.events.push({ id:1, date:'2025-06-20', time:'09:00', title:'Prova de Fisiologia 📚', type:'Prova', notes:'Capítulos 1-5' });
+    state.events.push({ id:2, date:'2026-07-05', time:'14:00', title:'Simulado - Farmacologia 📝', type:'Simulado', notes:'' });
+    persist('glam_events', state.events);
+  }
+  if(!state.forum.length){
+    state.forum = [
+      { id: Date.now()+1, title:'💊 Farmacologia - dúvidas', posts:[{ id:1, author:'Profª Glam', text:'Apresente sua dúvida específica.' }] }
+    ];
+    persist('glam_forum', state.forum);
+  }
+}
+
+// --- initial render ---
+function renderAll(){
+  yearSel.value = state.year;
+  renderCalendar(); renderUpcoming(); renderDiary(); renderTodos(); renderForum();
+}
+prevBtn.addEventListener('click', ()=> { state.month--; if(state.month<0){ state.month=11; state.year--; yearSel.value=state.year;} renderCalendar(); });
+nextBtn.addEventListener('click', ()=> { state.month++; if(state.month>11){ state.month=0; state.year++; yearSel.value=state.year;} renderCalendar(); });
+yearSel.addEventListener('change', ()=> { state.year = Number(yearSel.value); renderCalendar(); });
+
+// open add modal
+openAdd.addEventListener('click', ()=> openEventModal(''));
+
+// --- initialization ---
+(function init(){
+  // normalize initial year/month within 2025-2028
+  const now = new Date();
+  if(now.getFullYear() < 2025) { state.year = 2025; state.month = 0; }
+  if(now.getFullYear() > 2028) { state.year = 2028; state.month = 11; }
+  seed();
+  renderAll();
+  initSchedule();
+  rotateMotivation();
+})();
+
+</script>
+</body>
+</html>
